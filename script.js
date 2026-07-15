@@ -5,6 +5,11 @@ let favorites =
     )
   ) || [];
 
+const historySearch =
+  document.getElementById(
+    "history-search"
+  );
+
 const exportBtn =
   document.getElementById(
     "export-btn"
@@ -544,8 +549,7 @@ updateDashboard();
 }
 
 function renderHistory() {
-  historyList.innerHTML =
-    "";
+  historyList.innerHTML = "";
 
   const history =
     JSON.parse(
@@ -554,38 +558,49 @@ function renderHistory() {
       )
     ) || [];
 
-  history.forEach(
-    (item, index) => {
-      const li =
-        document.createElement(
-          "li"
+  const search =
+    historySearch.value
+      .toLowerCase()
+      .trim();
+
+  history
+    .filter(item =>
+      item.formula
+        .toLowerCase()
+        .includes(search)
+    )
+    .forEach(
+      (item, index) => {
+        const li =
+          document.createElement(
+            "li"
+          );
+
+        li.innerHTML = `
+          <strong>
+            ${item.formula}
+          </strong><br>
+
+          ${Number(
+            item.answer
+          ).toLocaleString()}<br>
+
+          <small>
+            ${item.date}
+          </small><br>
+
+          <button
+            class="delete-btn"
+            data-index="${index}">
+            🗑️ Delete
+          </button>
+        `;
+
+        historyList.append(
+          li
         );
-
-      li.innerHTML = `
-      <strong>
-        ${item.formula}
-      </strong><br>
-
-      ${Number(
-        item.answer
-      ).toLocaleString()}<br>
-
-      <small>
-        ${item.date}
-      </small><br>
-
-      <button
-        class="delete-btn"
-        data-index="${index}">
-        🗑️ Delete
-      </button>
-      `;
-
-      historyList.append(
-        li
-      );
-    }
-  );
+      }
+    );
 }
 
 historyList.addEventListener(
@@ -863,3 +878,11 @@ function updateDashboard() {
   ).textContent =
     top;
 }
+
+/*------‐---
+HISTORY SEARCH
+----------*/
+historySearch.addEventListener(
+  "input",
+  renderHistory
+);
