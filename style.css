@@ -217,3 +217,12 @@ textarea {
   font-size: 2rem;
   margin-top: 10px;
 }
+
+.charts {
+  margin-bottom: 30px;
+}
+
+.charts canvas {
+  width: 100% !important;
+  max-height: 400px;
+}

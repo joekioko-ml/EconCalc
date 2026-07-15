@@ -85,7 +85,8 @@ document.addEventListener(
     renderHistory();
     renderFavorites();
     updateDashboard();
-  }
+    updateChart();
+ }
 );
 
 themeBtn.addEventListener(
@@ -546,6 +547,7 @@ function saveHistory(
 
   renderHistory();
 updateDashboard();
+updateChart();
 }
 
 function renderHistory() {
@@ -639,7 +641,8 @@ historyList.addEventListener(
     );
 
     renderHistory();
-updateDashboard();  
+    updateDashboard();
+    updateChart();
 }
 );
 
@@ -886,3 +889,61 @@ historySearch.addEventListener(
   "input",
   renderHistory
 );
+
+/*---------
+CHARTS
+---‐---*/
+let formulaChart;
+
+function updateChart() {
+  const history =
+    JSON.parse(
+      localStorage.getItem(
+        "history"
+      )
+    ) || [];
+
+  const counts = {};
+
+  history.forEach(
+    item => {
+      counts[item.formula] =
+        (counts[item.formula] || 0) + 1;
+    }
+  );
+
+  const labels =
+    Object.keys(counts);
+
+  const data =
+    Object.values(counts);
+
+  const ctx =
+    document.getElementById(
+      "formula-chart"
+    );
+
+  if (!ctx) return;
+
+  if (formulaChart) {
+    formulaChart.destroy();
+  }
+
+  formulaChart =
+    new Chart(
+      ctx,
+      {
+        type: "bar",
+        data: {
+          labels,
+          datasets: [
+            {
+              label:
+                "Times Used",
+              data
+            }
+          ]
+        }
+      }
+    );
+}
