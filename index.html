@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>EconCalc</title>
+
+  <link
+    rel="stylesheet"
+    href="style.css"
+  >
+</head>
+<body>
+
+<div class="overlay">
+
+<header>
+  <h1>EconCalc 📈</h1>
+
+  <div class="header-right">
+    <button id="theme-btn">
+      🌙
+    </button>
+
+    <button id="nav-btn">
+      ☰
+    </button>
+  </div>
+</header>
+
+<section class="hero glass">
+  <h2>Economics Made Simple</h2>
+
+  <p>
+    Financial calculations,
+    economic tools and analytics.
+  </p>
+</section>
+
+<main>
+
+  <section class="sidebar glass">
+
+    <h3>History</h3>
+
+    <ul id="history-list">
+
+    </ul>
+
+  </section>
+
+  <section class="sidebar glass">
+
+    <h3>Favorites</h3>
+
+    <ul id="favorites-list">
+
+    </ul>
+
+  </section>
+
+  <section class="sidebar glass">
+
+    <h3>Comments</h3>
+
+    <ul id="comments-list">
+
+    </ul>
+
+  </section>
+
+  <section class="calculator glass">
+
+    <h2>Calculator</h2>
+
+<select id="formula-select">
+
+  <option value="">
+    Select Formula
+  </option>
+
+  <option value="standard">
+    Standard Calculator
+  </option>
+
+  <option value="simple">
+    Simple Interest
+  </option>
+
+  <option value="compound">
+    Compound Interest
+  </option>
+
+  <option value="future">
+    Future Value
+  </option>
+
+  <option value="present">
+    Present Value
+  </option>
+
+<option value="currency">
+  Currency Converter
+</option>
+
+</select>
+
+    <div id="inputs">
+
+    </div>
+
+    <button id="calculate-btn">
+      Calculate
+    </button>
+
+    <h2 id="result">
+      Result
+    </h2>
+
+    <textarea
+      id="comment"
+      placeholder="Leave notes..."
+    ></textarea>
+
+  </section>
+
+</main>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>

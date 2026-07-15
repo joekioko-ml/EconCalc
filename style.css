@@ -1,0 +1,198 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  font-family: Arial, sans-serif;
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  color: white;
+}
+
+.overlay {
+  min-height: 100vh;
+  background: rgba(0, 0, 0, 0.35);
+  padding: 15px;
+}
+
+/* Header */
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-bottom: 20px;
+}
+
+.header-right {
+  display: flex;
+  gap: 10px;
+}
+
+/* Inputs */
+
+button,
+select,
+input,
+textarea {
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+}
+
+/* Glass effect */
+
+.glass {
+  background: rgba(255, 255, 255, 0.15);
+
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  border: 1px solid
+    rgba(255, 255, 255, 0.25);
+
+  border-radius: 20px;
+  padding: 20px;
+}
+
+/* Hero */
+
+.hero {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Mobile layout */
+
+main {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Tablet/Laptop layout */
+
+@media (min-width: 768px) {
+  main {
+    display: grid;
+
+    grid-template-columns:
+      1fr
+      1fr
+      1fr
+      3fr;
+
+    gap: 20px;
+  }
+}
+
+.sidebar ul {
+  list-style: none;
+}
+
+.sidebar li {
+  margin-bottom: 12px;
+}
+
+.sidebar,
+.calculator {
+  overflow: hidden;
+}
+
+/* Calculator */
+
+.calculator {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+#inputs input {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+#result {
+  min-height: 40px;
+  font-size: 1.3rem;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+/* Dark mode */
+
+.dark {
+  background: #111;
+}
+
+.dark .glass {
+  background:
+    rgba(0, 0, 0, 0.45);
+}
+
+/* Standard calculator */
+
+.standard-calc {
+  width: 100%;
+}
+
+#display {
+  width: 100%;
+  margin-bottom: 15px;
+  padding: 15px;
+
+  font-size: 1.3rem;
+  color: black;
+}
+
+.buttons {
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, 1fr);
+
+  gap: 10px;
+}
+
+.buttons button {
+  min-height: 60px;
+
+  font-size: 1.1rem;
+
+  background:
+    rgba(255, 255, 255, 0.25);
+
+  color: white;
+
+  cursor: pointer;
+}
+
+.buttons button:hover {
+  background:
+    rgba(255, 255, 255, 0.35);
+}
+
+#inputs select,
+#swap-btn {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.delete-btn {
+  margin-top: 8px;
+  padding: 6px 10px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  width: 100%;
+}
