@@ -79,6 +79,7 @@ document.addEventListener(
     changeBackground();
     renderHistory();
     renderFavorites();
+    updateDashboard();
   }
 );
 
@@ -539,6 +540,7 @@ function saveHistory(
   );
 
   renderHistory();
+updateDashboard();
 }
 
 function renderHistory() {
@@ -622,7 +624,8 @@ historyList.addEventListener(
     );
 
     renderHistory();
-  }
+updateDashboard();  
+}
 );
 
 function renderFavorites() {
@@ -767,3 +770,96 @@ exportBtn.addEventListener(
     );
   }
 );
+
+/*--------------
+DASHBOARD FEATURE
+---‐----------*/
+
+function updateDashboard() {
+  const history =
+    JSON.parse(
+      localStorage.getItem(
+        "history"
+      )
+    ) || [];
+
+  document.getElementById(
+    "total-calcs"
+  ).textContent =
+    history.length;
+
+  if (
+    history.length === 0
+  ) {
+    return;
+  }
+
+  const answers =
+    history.map(
+      item =>
+        Number(item.answer)
+    );
+
+  const largest =
+    Math.max(...answers);
+
+  const average =
+    answers.reduce(
+      (sum, num) =>
+        sum + num,
+      0
+    ) / answers.length;
+
+  document.getElementById(
+    "largest-result"
+  ).textContent =
+    largest.toLocaleString();
+
+  document.getElementById(
+    "average-result"
+  ).textContent =
+    average.toFixed(2);
+
+  const counts = {};
+
+  history.forEach(
+    item => {
+      counts[
+        item.formula
+      ] =
+        (counts[
+          item.formula
+        ] || 0) + 1;
+    }
+  );
+
+  let top =
+    "";
+
+  let max =
+    0;
+
+  for (
+    let formula
+    in counts
+  ) {
+    if (
+      counts[
+        formula
+      ] > max
+    ) {
+      max =
+        counts[
+          formula
+        ];
+
+      top =
+        formula;
+    }
+  }
+
+  document.getElementById(
+    "top-formula"
+  ).textContent =
+    top;
+}
