@@ -6,7 +6,6 @@
     name="viewport"
     content="width=device-width, initial-scale=1.0"
   >
-
   <title>EconCalc</title>
 
   <link
@@ -44,70 +43,64 @@
 <main>
 
   <section class="sidebar glass">
-
     <h3>History</h3>
 
     <ul id="history-list">
 
     </ul>
-
   </section>
 
   <section class="sidebar glass">
-
     <h3>Favorites</h3>
 
     <ul id="favorites-list">
 
     </ul>
-
   </section>
 
   <section class="sidebar glass">
-
     <h3>Comments</h3>
 
     <ul id="comments-list">
 
     </ul>
-
   </section>
 
   <section class="calculator glass">
 
     <h2>Calculator</h2>
 
-<select id="formula-select">
+    <select id="formula-select">
 
-  <option value="">
-    Select Formula
-  </option>
+      <option value="">
+        Select Formula
+      </option>
 
-  <option value="standard">
-    Standard Calculator
-  </option>
+      <option value="standard">
+        Standard Calculator
+      </option>
 
-  <option value="simple">
-    Simple Interest
-  </option>
+      <option value="simple">
+        Simple Interest
+      </option>
 
-  <option value="compound">
-    Compound Interest
-  </option>
+      <option value="compound">
+        Compound Interest
+      </option>
 
-  <option value="future">
-    Future Value
-  </option>
+      <option value="future">
+        Future Value
+      </option>
 
-  <option value="present">
-    Present Value
-  </option>
+      <option value="present">
+        Present Value
+      </option>
 
-<option value="currency">
-  Currency Converter
-</option>
+      <option value="currency">
+        Currency Converter
+      </option>
 
-</select>
+    </select>
 
     <div id="inputs">
 
@@ -116,6 +109,14 @@
     <button id="calculate-btn">
       Calculate
     </button>
+
+    <button id="favorite-btn">
+      ⭐ Favorite Calculator
+    </button>
+
+<button id="export-btn">
+  📥 Export History
+</button>
 
     <h2 id="result">
       Result

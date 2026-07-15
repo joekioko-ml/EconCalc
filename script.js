@@ -1,3 +1,15 @@
+let favorites =
+  JSON.parse(
+    localStorage.getItem(
+      "favorites"
+    )
+  ) || [];
+
+const exportBtn =
+  document.getElementById(
+    "export-btn"
+  );
+
 const select =
   document.getElementById(
     "formula-select"
@@ -23,6 +35,11 @@ const historyList =
     "history-list"
   );
 
+const favoritesList =
+  document.getElementById(
+    "favorites-list"
+  );
+
 const commentBox =
   document.getElementById(
     "comment"
@@ -33,9 +50,10 @@ const themeBtn =
     "theme-btn"
   );
 
-/* --------------------
-   BACKGROUNDS
--------------------- */
+const favoriteBtn =
+  document.getElementById(
+    "favorite-btn"
+  );
 
 const backgrounds = [
   "images/bg1.jpg",
@@ -55,21 +73,14 @@ function changeBackground() {
     `url(${backgrounds[random]})`;
 }
 
-/* --------------------
-   STARTUP
--------------------- */
-
 document.addEventListener(
   "DOMContentLoaded",
   () => {
     changeBackground();
     renderHistory();
+    renderFavorites();
   }
 );
-
-/* --------------------
-   DARK MODE
--------------------- */
 
 themeBtn.addEventListener(
   "click",
@@ -80,16 +91,10 @@ themeBtn.addEventListener(
   }
 );
 
-/* --------------------
-   DYNAMIC FORMS
--------------------- */
-
 select.addEventListener(
   "change",
   () => {
     inputs.innerHTML = "";
-
-    /* Standard Calculator */
 
     if (
       select.value ===
@@ -97,13 +102,11 @@ select.addEventListener(
     ) {
       inputs.innerHTML = `
       <div class="standard-calc">
-
         <input
           id="display"
           readonly>
 
         <div class="buttons">
-
           <button>C</button>
           <button>(</button>
           <button>)</button>
@@ -128,98 +131,74 @@ select.addEventListener(
           <button>.</button>
           <button>%</button>
           <button>=</button>
-
         </div>
-
       </div>
       `;
     }
-
-    /* Simple Interest */
 
     if (
       select.value ===
       "simple"
     ) {
       inputs.innerHTML = `
-      <input
-        id="p"
-        placeholder="Principal (KES)">
+      <input id="p"
+      placeholder="Principal">
 
-      <input
-        id="r"
-        placeholder="Rate (%)">
+      <input id="r"
+      placeholder="Rate %">
 
-      <input
-        id="t"
-        placeholder="Time (Years)">
+      <input id="t"
+      placeholder="Years">
       `;
     }
-
-    /* Compound Interest */
 
     if (
       select.value ===
       "compound"
     ) {
       inputs.innerHTML = `
-      <input
-        id="p"
-        placeholder="Principal (KES)">
+      <input id="p"
+      placeholder="Principal">
 
-      <input
-        id="r"
-        placeholder="Rate (%)">
+      <input id="r"
+      placeholder="Rate %">
 
-      <input
-        id="t"
-        placeholder="Years">
+      <input id="t"
+      placeholder="Years">
       `;
     }
-
-    /* Future Value */
 
     if (
       select.value ===
       "future"
     ) {
       inputs.innerHTML = `
-      <input
-        id="pv"
-        placeholder="Present Value">
+      <input id="pv"
+      placeholder="Present Value">
 
-      <input
-        id="r"
-        placeholder="Rate (%)">
+      <input id="r"
+      placeholder="Rate %">
 
-      <input
-        id="n"
-        placeholder="Years">
+      <input id="n"
+      placeholder="Years">
       `;
     }
-
-    /* Present Value */
 
     if (
       select.value ===
       "present"
     ) {
       inputs.innerHTML = `
-      <input
-        id="fv"
-        placeholder="Future Value">
+      <input id="fv"
+      placeholder="Future Value">
 
-      <input
-        id="r"
-        placeholder="Rate (%)">
+      <input id="r"
+      placeholder="Rate %">
 
-      <input
-        id="n"
-        placeholder="Years">
+      <input id="n"
+      placeholder="Years">
       `;
     }
-
-    /* Currency Converter */
 
     if (
       select.value ===
@@ -232,33 +211,10 @@ select.addEventListener(
         placeholder="Amount">
 
       <select id="from">
-        <option value="USD">
-          USD
-        </option>
-
-        <option value="KES">
-          KES
-        </option>
-
-        <option value="EUR">
-          EUR
-        </option>
-
-        <option value="GBP">
-          GBP
-        </option>
-
-        <option value="JPY">
-          JPY
-        </option>
-
-        <option value="CAD">
-          CAD
-        </option>
-
-        <option value="AUD">
-          AUD
-        </option>
+        <option>USD</option>
+        <option>KES</option>
+        <option>EUR</option>
+        <option>GBP</option>
       </select>
 
       <button id="swap-btn">
@@ -266,48 +222,19 @@ select.addEventListener(
       </button>
 
       <select id="to">
-        <option value="KES">
-          KES
-        </option>
-
-        <option value="USD">
-          USD
-        </option>
-
-        <option value="EUR">
-          EUR
-        </option>
-
-        <option value="GBP">
-          GBP
-        </option>
-
-        <option value="JPY">
-          JPY
-        </option>
-
-        <option value="CAD">
-          CAD
-        </option>
-
-        <option value="AUD">
-          AUD
-        </option>
+        <option>KES</option>
+        <option>USD</option>
+        <option>EUR</option>
+        <option>GBP</option>
       </select>
       `;
     }
   }
 );
 
-/* --------------------
-   INPUT EVENTS
--------------------- */
-
 inputs.addEventListener(
   "click",
   (e) => {
-    /* Swap currencies */
-
     if (
       e.target.id ===
       "swap-btn"
@@ -334,8 +261,6 @@ inputs.addEventListener(
       return;
     }
 
-    /* Calculator buttons */
-
     if (
       !e.target.matches(
         ".buttons button"
@@ -348,8 +273,6 @@ inputs.addEventListener(
       document.getElementById(
         "display"
       );
-
-    if (!display) return;
 
     const value =
       e.target.textContent;
@@ -365,8 +288,7 @@ inputs.addEventListener(
           eval(
             display.value
           );
-      }
-      catch {
+      } catch {
         display.value =
           "Error";
       }
@@ -386,10 +308,6 @@ inputs.addEventListener(
     display.value += value;
   }
 );
-
-/* --------------------
-   CURRENCY API
--------------------- */
 
 async function convertCurrency() {
   const amount =
@@ -421,26 +339,12 @@ async function convertCurrency() {
     const data =
       await response.json();
 
-    const rate =
+    const converted =
+      amount *
       data.rates[to];
 
-    if (!rate) {
-      result.textContent =
-        "Currency not found";
-      return;
-    }
-
-    const converted =
-      amount * rate;
-
     result.textContent =
-      converted.toLocaleString(
-        undefined,
-        {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2
-        }
-      );
+      converted.toLocaleString();
 
     saveHistory(
       `${from} → ${to}`,
@@ -452,10 +356,6 @@ async function convertCurrency() {
       "Network Error";
   }
 }
-
-/* --------------------
-   CALCULATIONS
--------------------- */
 
 calculateBtn.addEventListener(
   "click",
@@ -602,13 +502,7 @@ calculateBtn.addEventListener(
       answer !== undefined
     ) {
       result.textContent =
-        answer.toLocaleString(
-          undefined,
-          {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-          }
-        );
+        answer.toLocaleString();
 
       saveHistory(
         select.value,
@@ -617,10 +511,6 @@ calculateBtn.addEventListener(
     }
   }
 );
-
-/* --------------------
-   HISTORY
--------------------- */
 
 function saveHistory(
   formula,
@@ -636,8 +526,6 @@ function saveHistory(
   history.push({
     formula,
     answer,
-    comment:
-      commentBox.value,
     date:
       new Date()
         .toLocaleString()
@@ -654,7 +542,8 @@ function saveHistory(
 }
 
 function renderHistory() {
-  historyList.innerHTML = "";
+  historyList.innerHTML =
+    "";
 
   const history =
     JSON.parse(
@@ -664,24 +553,30 @@ function renderHistory() {
     ) || [];
 
   history.forEach(
-    (item) => {
+    (item, index) => {
       const li =
         document.createElement(
           "li"
         );
 
       li.innerHTML = `
-        <strong>
-          ${item.formula}
-        </strong><br>
+      <strong>
+        ${item.formula}
+      </strong><br>
 
-        ${Number(
-          item.answer
-        ).toLocaleString()}<br>
+      ${Number(
+        item.answer
+      ).toLocaleString()}<br>
 
-        <small>
-          ${item.date}
-        </small>
+      <small>
+        ${item.date}
+      </small><br>
+
+      <button
+        class="delete-btn"
+        data-index="${index}">
+        🗑️ Delete
+      </button>
       `;
 
       historyList.append(
@@ -690,3 +585,185 @@ function renderHistory() {
     }
   );
 }
+
+historyList.addEventListener(
+  "click",
+  (e) => {
+    if (
+      !e.target.classList.contains(
+        "delete-btn"
+      )
+    ) {
+      return;
+    }
+
+    const index =
+      Number(
+        e.target.dataset.index
+      );
+
+    const history =
+      JSON.parse(
+        localStorage.getItem(
+          "history"
+        )
+      ) || [];
+
+    history.splice(
+      index,
+      1
+    );
+
+    localStorage.setItem(
+      "history",
+      JSON.stringify(
+        history
+      )
+    );
+
+    renderHistory();
+  }
+);
+
+function renderFavorites() {
+  favoritesList.innerHTML =
+    "";
+
+  favorites.forEach(
+    (item) => {
+      const li =
+        document.createElement(
+          "li"
+        );
+
+      li.innerHTML = `
+      <button
+        class="favorite-item"
+        data-formula="${item}">
+        ⭐ ${item}
+      </button>
+      `;
+
+      favoritesList.append(
+        li
+      );
+    }
+  );
+}
+
+favoriteBtn.addEventListener(
+  "click",
+  () => {
+    const formula =
+      select.value;
+
+    if (
+      !formula ||
+      favorites.includes(
+        formula
+      )
+    ) {
+      return;
+    }
+
+    favorites.push(
+      formula
+    );
+
+    localStorage.setItem(
+      "favorites",
+      JSON.stringify(
+        favorites
+      )
+    );
+
+    renderFavorites();
+  }
+);
+
+favoritesList.addEventListener(
+  "click",
+  (e) => {
+    if (
+      !e.target.classList.contains(
+        "favorite-item"
+      )
+    ) {
+      return;
+    }
+
+    select.value =
+      e.target.dataset.formula;
+
+    select.dispatchEvent(
+      new Event(
+        "change"
+      )
+    );
+  }
+);
+
+/*-----‐---------
+EXPORT FEATURE
+---------*/
+exportBtn.addEventListener(
+  "click",
+  () => {
+    const history =
+      JSON.parse(
+        localStorage.getItem(
+          "history"
+        )
+      ) || [];
+
+    if (
+      history.length === 0
+    ) {
+      alert(
+        "No history to export."
+      );
+      return;
+    }
+
+    let csv =
+      "Formula,Answer,Date\n";
+
+    history.forEach(
+      (item) => {
+        csv +=
+          `"${item.formula}",` +
+          `"${item.answer}",` +
+          `"${item.date}"\n`;
+      }
+    );
+
+    const blob =
+      new Blob(
+        [csv],
+        {
+          type:
+            "text/csv"
+        }
+      );
+
+    const url =
+      URL.createObjectURL(
+        blob
+      );
+
+    const a =
+      document.createElement(
+        "a"
+      );
+
+    a.href = url;
+    a.download =
+      "econcalc-history.csv";
+
+    a.click();
+
+    URL.revokeObjectURL(
+      url
+    );
+  }
+);
