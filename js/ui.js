@@ -1,24 +1,40 @@
 // js/ui.js
 // DOM manipulation and UI rendering
+// NOTE: DOM elements are cached AFTER document is ready
 
 const UI = {
-  // Cache frequently used DOM elements
-  elements: {
-    formulaSelect: document.getElementById('formula-select'),
-    inputs: document.getElementById('inputs'),
-    result: document.getElementById('result'),
-    calculateBtn: document.getElementById('calculate-btn'),
-    historyList: document.getElementById('history-list'),
-    historySearch: document.getElementById('history-search'),
-    favoritesList: document.getElementById('favorites-list'),
-    favoriteBtn: document.getElementById('favorite-btn'),
-    exportBtn: document.getElementById('export-btn'),
-    themeBtn: document.getElementById('theme-btn'),
-    totalCalcs: document.getElementById('total-calcs'),
-    topFormula: document.getElementById('top-formula'),
-    largestResult: document.getElementById('largest-result'),
-    averageResult: document.getElementById('average-result'),
-    formulaChart: document.getElementById('formula-chart')
+  // Cache frequently used DOM elements - will be initialized in main.js
+  elements: {},
+
+  /**
+   * Initialize DOM element cache - must be called after DOM is ready
+   */
+  initElements() {
+    this.elements = {
+      formulaSelect: document.getElementById('formula-select'),
+      inputs: document.getElementById('inputs'),
+      result: document.getElementById('result'),
+      calculateBtn: document.getElementById('calculate-btn'),
+      historyList: document.getElementById('history-list'),
+      historySearch: document.getElementById('history-search'),
+      favoritesList: document.getElementById('favorites-list'),
+      favoriteBtn: document.getElementById('favorite-btn'),
+      exportBtn: document.getElementById('export-btn'),
+      themeBtn: document.getElementById('theme-btn'),
+      totalCalcs: document.getElementById('total-calcs'),
+      topFormula: document.getElementById('top-formula'),
+      largestResult: document.getElementById('largest-result'),
+      averageResult: document.getElementById('average-result'),
+      formulaChart: document.getElementById('formula-chart'),
+      commentBox: document.getElementById('comment')
+    };
+
+    // Validate all elements are found
+    for (const [key, element] of Object.entries(this.elements)) {
+      if (!element) {
+        console.error(`❌ DOM element not found: ${key}`);
+      }
+    }
   },
 
   /**
@@ -28,6 +44,88 @@ const UI = {
    */
   renderCalculatorInputs(calculatorId, inputConfig) {
     this.elements.inputs.innerHTML = '';
+
+    // Handle special case: currency converter
+    if (calculatorId === 'currency') {
+      this.elements.inputs.innerHTML = `
+        <input
+          id="amount"
+          type="number"
+          placeholder="Amount">
+
+        <select id="from">
+          <option>USD</option>
+          <option>KES</option>
+          <option>EUR</option>
+          <option>GBP</option>
+        </select>
+
+        <button id="swap-btn" style="width: 100%; margin-bottom: 10px;">
+          🔄 Swap
+        </button>
+
+        <select id="to">
+          <option>KES</option>
+          <option>USD</option>
+          <option>EUR</option>
+          <option>GBP</option>
+        </select>
+      `;
+      // Re-attach swap button handler
+      const swapBtn = document.getElementById('swap-btn');
+      if (swapBtn) {
+        swapBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          const from = document.getElementById('from');
+          const to = document.getElementById('to');
+          const temp = from.value;
+          from.value = to.value;
+          to.value = temp;
+        });
+      }
+      return;
+    }
+
+    // Handle standard calculator
+    if (calculatorId === 'standard') {
+      this.elements.inputs.innerHTML = `
+        <div class="standard-calc">
+          <input
+            id="display"
+            readonly
+            style="width: 100%; margin-bottom: 15px; padding: 15px; font-size: 1.3rem; color: black;">
+
+          <div class="buttons" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;">
+            <button data-calc="C">C</button>
+            <button data-calc="(">(</button>
+            <button data-calc=")">)</button>
+            <button data-calc="/">/</button>
+
+            <button data-calc="7">7</button>
+            <button data-calc="8">8</button>
+            <button data-calc="9">9</button>
+            <button data-calc="*">*</button>
+
+            <button data-calc="4">4</button>
+            <button data-calc="5">5</button>
+            <button data-calc="6">6</button>
+            <button data-calc="-">-</button>
+
+            <button data-calc="1">1</button>
+            <button data-calc="2">2</button>
+            <button data-calc="3">3</button>
+            <button data-calc="+">+</button>
+
+            <button data-calc="0" style="grid-column: span 2;">0</button>
+            <button data-calc=".">.</button>
+            <button data-calc="%">%</button>
+          </div>
+        </div>
+      `;
+      // Re-attach calculator button handlers
+      this.setupStandardCalculatorHandlers();
+      return;
+    }
 
     if (!inputConfig || inputConfig.length === 0) {
       return;
@@ -39,6 +137,42 @@ const UI = {
       input.type = field.type || 'number';
       input.placeholder = field.label;
       this.elements.inputs.appendChild(input);
+    });
+  },
+
+  /**
+   * Setup standard calculator button handlers
+   */
+  setupStandardCalculatorHandlers() {
+    const display = document.getElementById('display');
+    const buttons = document.querySelectorAll('[data-calc]');
+
+    buttons.forEach(button => {
+      button.addEventListener('click', (e) => {
+        e.preventDefault();
+        const value = button.dataset.calc;
+
+        if (value === 'C') {
+          display.value = '';
+          return;
+        }
+
+        if (value === '=') {
+          try {
+            display.value = eval(display.value);
+          } catch {
+            display.value = 'Error';
+          }
+          return;
+        }
+
+        if (value === '%') {
+          display.value = Number(display.value) / 100;
+          return;
+        }
+
+        display.value += value;
+      });
     });
   },
 
@@ -71,7 +205,9 @@ const UI = {
     const inputs = this.elements.inputs.querySelectorAll('input, select');
     const values = {};
     inputs.forEach(input => {
-      values[input.id] = isNaN(input.value) ? input.value : Number(input.value);
+      if (input.id && input.id !== 'display') { // Exclude read-only display
+        values[input.id] = isNaN(input.value) ? input.value : Number(input.value);
+      }
     });
     return values;
   },
@@ -108,13 +244,15 @@ const UI = {
       return;
     }
 
-    filtered.forEach((item, index) => {
+    // FIX BUG #7: Use original history index, not filtered index
+    filtered.forEach((item) => {
+      const originalIndex = history.indexOf(item);
       const li = document.createElement('li');
       li.innerHTML = `
         <strong>${item.formula}</strong><br>
         ${Number(item.answer).toLocaleString()}<br>
         <small>${item.date}</small><br>
-        <button class="delete-btn" data-index="${index}">🗑️ Delete</button>
+        <button class="delete-btn" data-index="${originalIndex}">🗑️ Delete</button>
       `;
       this.elements.historyList.appendChild(li);
     });
@@ -198,7 +336,7 @@ const UI = {
     }
 
     // Create new chart
-    if (labels.length > 0) {
+    if (labels.length > 0 && this.elements.formulaChart) {
       const ctx = this.elements.formulaChart.getContext('2d');
       window.formulaChart = new Chart(ctx, {
         type: 'bar',
